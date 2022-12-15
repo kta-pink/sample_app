@@ -1,0 +1,53 @@
+[1mdiff --git a/app/controllers/users_controller.rb b/app/controllers/users_controller.rb[m
+[1mindex c4bb9a9..34394c9 100644[m
+[1m--- a/app/controllers/users_controller.rb[m
+[1m+++ b/app/controllers/users_controller.rb[m
+[36m@@ -7,4 +7,20 @@[m [mclass UsersController < ApplicationController[m
+   def new[m
+     @user = User.new[m
+   end[m
+[32m+[m
+[32m+[m[32m  def create[m
+[32m+[m[32m    @user = User.new(user_params)[m
+[32m+[m[32m    if @user.save[m
+[32m+[m[32m      # 保存の成功をここで扱う。[m
+[32m+[m[32m    else[m
+[32m+[m[32m      render 'new', status: :unprocessable_entity[m
+[32m+[m[32m    end[m
+[32m+[m[32m  end[m
+[32m+[m
+[32m+[m[32m  private[m
+[32m+[m
+[32m+[m[32m    def user_params[m
+[32m+[m[32m      params.require(:user).permit(:name, :email, :password,[m
+[32m+[m[32m                                   :password_confirmation)[m
+[32m+[m[32m    end[m
+ end[m
+[1mdiff --git a/app/views/users/new.html.erb b/app/views/users/new.html.erb[m
+[1mindex 3ad00eb..37483d9 100644[m
+[1m--- a/app/views/users/new.html.erb[m
+[1m+++ b/app/views/users/new.html.erb[m
+[36m@@ -4,17 +4,19 @@[m
+ <div class="row">[m
+   <div class="col-md-6 col-md-offset-3">[m
+     <%= form_with(model: @user) do |f| %>[m
+[32m+[m[32m      <%= render 'shared/error_messages' %>[m
+[32m+[m
+       <%= f.label :name %>[m
+[31m-      <%= f.text_field :name %>[m
+[32m+[m[32m      <%= f.text_field :name, class: 'form-control' %>[m
+ [m
+       <%= f.label :email %>[m
+[31m-      <%= f.email_field :email %>[m
+[32m+[m[32m      <%= f.email_field :email, class: 'form-control' %>[m
+ [m
+       <%= f.label :password %>[m
+[31m-      <%= f.password_field :password %>[m
+[32m+[m[32m      <%= f.password_field :password, class: 'form-control' %>[m
+ [m
+       <%= f.label :password_confirmation, "Confirmation" %>[m
+[31m-      <%= f.password_field :password_confirmation %>[m
+[32m+[m[32m      <%= f.password_field :password_confirmation, class: 'form-control' %>[m
+ [m
+       <%= f.submit "Create my account", class: "btn btn-primary" %>[m
+     <% end %>[m
