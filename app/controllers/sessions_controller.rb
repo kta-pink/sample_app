@@ -5,7 +5,9 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
-      # ユーザーログイン後にユーザー情報のページにリダイレクトする
+      reset_session      # ハイジャック対策でログインの直前に必ずこれを書くこと
+      log_in user
+      redirect_to user
     else
       # エラーメッセージを作成する
       flash.now[:danger] = 'Invalid email/password combination'
@@ -14,5 +16,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    log_out
+    redirect_to root_url, status: :see_other
   end
 end
